@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { View, Image, Animated, StyleSheet, ImageBackground } from "react-native";
+import { Image, Animated, StyleSheet, ImageBackground } from "react-native";
 import {
   Directions,
   FlingGestureHandler,
+  gestureHandlerRootHOC,
   State,
 } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -35,11 +36,11 @@ const transition = (
 
 const config = {
   transition: {
-    type: 'tween',
+    type: "tween",
     duration: DURATION,
-    easing: Easing.elastic(0.9)
-  }
-}
+    easing: Easing.elastic(0.9),
+  },
+};
 
 const PosedView = posed.View({
   enter: { opacity: 1, rotate: "0deg", ...config },
@@ -72,6 +73,8 @@ const AdvancedAnimationCarousel = () => {
     inputRange: [-1, 0, 1],
     outputRange: [height, 0, -height],
   });
+
+  console.log("height ", height);
 
   return (
     <FlingGestureHandler
@@ -109,10 +112,14 @@ const AdvancedAnimationCarousel = () => {
               //     backgroundColor: i % 2 === 0 ? colors.lightBg : colors.darkBg,
               //   }}
               // ></View>
-              <ImageBackground 
-                source={{ uri: datas[index].image as string, cache: 'force-cache' }}
+              <ImageBackground
+                source={{
+                  uri: datas[index].image as string,
+                  cache: "force-cache",
+                }}
                 blurRadius={50}
-                style={{height}}
+                style={{ height: height }}
+                key={i.toString()}
               />
             ))}
           </Animated.View>
@@ -145,7 +152,10 @@ const AdvancedAnimationCarousel = () => {
                 ]}
               >
                 <Image
-                  source={{ uri: datas[index].image as string, cache: 'force-cache' }}
+                  source={{
+                    uri: datas[index].image as string,
+                    cache: "force-cache",
+                  }}
                   style={styles.image}
                 />
               </PosedView>
@@ -185,6 +195,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     position: "absolute",
+    borderRadius: IMAGE_SIZE,
     right: -IMAGE_SIZE / 2.2,
     top: (height - IMAGE_SIZE) / 2,
     shadowColor: "#000",
@@ -205,4 +216,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AdvancedAnimationCarousel;
+export default gestureHandlerRootHOC(AdvancedAnimationCarousel);
